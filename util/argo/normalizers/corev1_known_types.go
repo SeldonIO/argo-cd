@@ -94,6 +94,9 @@ func init() {
 	knownTypes["core/v1/ContainerPort"] = func() interface{} {
 		return &corev1.ContainerPort{}
 	}
+	knownTypes["core/v1/ContainerResizePolicy"] = func() interface{} {
+		return &corev1.ContainerResizePolicy{}
+	}
 	knownTypes["core/v1/ContainerState"] = func() interface{} {
 		return &corev1.ContainerState{}
 	}
@@ -207,6 +210,9 @@ func init() {
 	}
 	knownTypes["core/v1/HostAlias"] = func() interface{} {
 		return &corev1.HostAlias{}
+	}
+	knownTypes["core/v1/HostIP"] = func() interface{} {
+		return &corev1.HostIP{}
 	}
 	knownTypes["core/v1/HostPathVolumeSource"] = func() interface{} {
 		return &corev1.HostPathVolumeSource{}
@@ -414,6 +420,9 @@ func init() {
 	}
 	knownTypes["core/v1/PodResourceClaim"] = func() interface{} {
 		return &corev1.PodResourceClaim{}
+	}
+	knownTypes["core/v1/PodResourceClaimStatus"] = func() interface{} {
+		return &corev1.PodResourceClaimStatus{}
 	}
 	knownTypes["core/v1/PodSchedulingGate"] = func() interface{} {
 		return &corev1.PodSchedulingGate{}

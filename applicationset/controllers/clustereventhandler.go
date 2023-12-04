@@ -24,19 +24,19 @@ type clusterSecretEventHandler struct {
 	Client client.Client
 }
 
-func (h *clusterSecretEventHandler) Create(e event.CreateEvent, q workqueue.RateLimitingInterface) {
+func (h *clusterSecretEventHandler) Create(context context.Context, e event.CreateEvent, q workqueue.RateLimitingInterface) {
 	h.queueRelatedAppGenerators(q, e.Object)
 }
 
-func (h *clusterSecretEventHandler) Update(e event.UpdateEvent, q workqueue.RateLimitingInterface) {
+func (h *clusterSecretEventHandler) Update(context context.Context, e event.UpdateEvent, q workqueue.RateLimitingInterface) {
 	h.queueRelatedAppGenerators(q, e.ObjectNew)
 }
 
-func (h *clusterSecretEventHandler) Delete(e event.DeleteEvent, q workqueue.RateLimitingInterface) {
+func (h *clusterSecretEventHandler) Delete(context context.Context, e event.DeleteEvent, q workqueue.RateLimitingInterface) {
 	h.queueRelatedAppGenerators(q, e.Object)
 }
 
-func (h *clusterSecretEventHandler) Generic(e event.GenericEvent, q workqueue.RateLimitingInterface) {
+func (h *clusterSecretEventHandler) Generic(context context.Context, e event.GenericEvent, q workqueue.RateLimitingInterface) {
 	h.queueRelatedAppGenerators(q, e.Object)
 }
 
