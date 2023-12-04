@@ -23,10 +23,12 @@ func (s *subscriber) matches(event *appv1.ApplicationWatchEvent) bool {
 	return true
 }
 
+//go:generate go run github.com/vektra/mockery/v2@v2.25.1 --name=Broadcaster
+
 // Broadcaster is an interface for broadcasting application informer watch events to multiple subscribers.
 type Broadcaster interface {
 	Subscribe(ch chan *appv1.ApplicationWatchEvent, filters ...func(event *appv1.ApplicationWatchEvent) bool) func()
-	OnAdd(interface{})
+	OnAdd(interface{}, bool)
 	OnUpdate(interface{}, interface{})
 	OnDelete(interface{})
 }
@@ -76,7 +78,7 @@ func (b *broadcasterHandler) Subscribe(ch chan *appv1.ApplicationWatchEvent, fil
 	}
 }
 
-func (b *broadcasterHandler) OnAdd(obj interface{}) {
+func (b *broadcasterHandler) OnAdd(obj interface{}, isInInitialList bool) {
 	if app, ok := obj.(*appv1.Application); ok {
 		b.notify(&appv1.ApplicationWatchEvent{Application: *app, Type: watch.Added})
 	}

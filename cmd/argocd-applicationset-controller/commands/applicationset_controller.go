@@ -5,6 +5,7 @@ import (
 	"math"
 	"net/http"
 	"os"
+	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"time"
 
 	"github.com/argoproj/pkg/stats"
@@ -22,6 +23,9 @@ import (
 	"github.com/argoproj/argo-cd/v2/common"
 	"github.com/argoproj/argo-cd/v2/util/env"
 	"github.com/argoproj/argo-cd/v2/util/github_app"
+	"sigs.k8s.io/controller-runtime/pkg/metrics/server"
+
+	wh "sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -114,14 +118,16 @@ func NewCommand() *cobra.Command {
 			}
 
 			mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-				Scheme:                 scheme,
-				MetricsBindAddress:     metricsAddr,
-				Namespace:              watchedNamespace,
+
+				Scheme:  scheme,
+				Metrics: server.Options{BindAddress: metricsAddr},
+				Cache: cache.Options{
+					DefaultNamespaces: map[string]cache.Config{watchedNamespace: {}},
+				},
 				HealthProbeBindAddress: probeBindAddr,
-				Port:                   9443,
+				WebhookServer:          wh.NewServer(wh.Options{Port: 9443}),
 				LeaderElection:         enableLeaderElection,
 				LeaderElectionID:       "58ac56fa.applicationsets.argoproj.io",
-				DryRunClient:           dryRun,
 			})
 
 			if err != nil {
